@@ -17,6 +17,7 @@ android {
 
 dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:support-compat:27.1.1'
 }
 
-apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
+apply from: 'https://raw.githubusercontent.com/daimajia/AndroidImageSlider/master/library/gradle-mvn-push.gradle'

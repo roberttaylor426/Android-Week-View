@@ -11,7 +11,6 @@ import android.graphics.RectF;
 import android.graphics.Region;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
@@ -1237,7 +1236,7 @@ public class WeekView extends View {
         return mEventClickListener;
     }
 
-    public @Nullable MonthLoader.MonthChangeListener getMonthChangeListener() {
+    public MonthLoader.MonthChangeListener getMonthChangeListener() {
         if (mWeekViewLoader instanceof MonthLoader)
             return ((MonthLoader) mWeekViewLoader).getOnMonthChangeListener();
         return null;
@@ -1768,7 +1767,6 @@ public class WeekView extends View {
 
     /**
      * Set whether the week view should fling horizontally.
-     * @return True if it should have horizontal fling enabled.
      */
     public void setHorizontalFlingEnabled(boolean enabled) {
         mHorizontalFlingEnabled = enabled;
