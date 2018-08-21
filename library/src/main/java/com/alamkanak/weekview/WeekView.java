@@ -251,7 +251,7 @@ public class WeekView extends View {
             if (earliestScrollableDate == null) return Integer.MAX_VALUE;
 
             int daysScrollableIntoThePast = Days.daysBetween(earliestScrollableDate.toLocalDate(), LocalDate.now()).getDays();
-            return ((int) (mColumnGap + mWidthPerDay) * daysScrollableIntoThePast) + (int) (mWidthPerDay / 3);
+            return ((int) (mColumnGap + mWidthPerDay) * daysScrollableIntoThePast) + (int) (determineColumnWidth());
         }
 
         private int getMinY() {
@@ -560,11 +560,15 @@ public class WeekView extends View {
         }
     }
 
+    private float determineColumnWidth() {
+        float availableColumnsWidth = getWidth() - mHeaderColumnWidth - mColumnGap * (mNumberOfVisibleDays - 1);
+        return availableColumnsWidth / mNumberOfVisibleDays;
+    }
+
     private void drawHeaderRowAndEvents(Canvas canvas) {
         // Calculate the available width for each day.
         mHeaderColumnWidth = mTimeTextWidth + mHeaderColumnPadding *2;
-        mWidthPerDay = getWidth() - mHeaderColumnWidth - mColumnGap * (mNumberOfVisibleDays - 1);
-        mWidthPerDay = mWidthPerDay/mNumberOfVisibleDays;
+        mWidthPerDay = determineColumnWidth();
 
         calculateHeaderHeight(); //Make sure the header is the right size (depends on AllDay events)
 
