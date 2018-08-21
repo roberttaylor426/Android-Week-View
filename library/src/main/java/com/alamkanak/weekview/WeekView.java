@@ -201,7 +201,7 @@ public class WeekView extends View {
             switch (mCurrentScrollDirection) {
                 case LEFT:
                 case RIGHT:
-                    mCurrentOrigin.x -= Math.min(getMaxX(), distanceX * mXScrollingSpeed);
+                    mCurrentOrigin.x = Math.min(getMaxX(), mCurrentOrigin.x - distanceX * mXScrollingSpeed);
                     ViewCompat.postInvalidateOnAnimation(WeekView.this);
                     break;
                 case VERTICAL:
