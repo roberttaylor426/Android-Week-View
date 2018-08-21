@@ -247,13 +247,6 @@ public class WeekView extends View {
             return true;
         }
 
-        private int getMaxX() {
-            if (earliestScrollableDate == null) return Integer.MAX_VALUE;
-
-            int daysScrollableIntoThePast = Days.daysBetween(earliestScrollableDate.toLocalDate(), LocalDate.now()).getDays();
-            return ((int) (mColumnGap + mWidthPerDay) * daysScrollableIntoThePast) + (int) (determineColumnWidth() / 4);
-        }
-
         private int getMinY() {
             return (int) -(mHourHeight * 24 + mHeaderHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight / 2 - getHeight());
         }
@@ -1881,6 +1874,10 @@ public class WeekView extends View {
 
         int nearestOrigin = (int) (mCurrentOrigin.x - leftDays * (mWidthPerDay + mColumnGap));
 
+        if (nearestOrigin > getMaxX()) {
+            nearestOrigin = (int) (mCurrentOrigin.x - (leftDays - 1) * (mWidthPerDay + mColumnGap));
+        }
+
         if (nearestOrigin != 0) {
             // Stop current animation.
             mScroller.forceFinished(true);
@@ -1892,6 +1889,12 @@ public class WeekView extends View {
         mCurrentScrollDirection = mCurrentFlingDirection = Direction.NONE;
     }
 
+    private int getMaxX() {
+        if (earliestScrollableDate == null) return Integer.MAX_VALUE;
+
+        int daysScrollableIntoThePast = Days.daysBetween(earliestScrollableDate.toLocalDate(), LocalDate.now()).getDays();
+        return ((int) (mColumnGap + mWidthPerDay) * daysScrollableIntoThePast) + (int) (determineColumnWidth() / 4);
+    }
 
     @Override
     public void computeScroll() {
