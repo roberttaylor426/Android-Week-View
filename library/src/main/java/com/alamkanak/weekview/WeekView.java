@@ -208,7 +208,7 @@ public class WeekView extends View {
             switch (mCurrentScrollDirection) {
                 case LEFT:
                 case RIGHT:
-                    mCurrentOrigin.x = Math.min(getMaxX(), mCurrentOrigin.x - distanceX * mXScrollingSpeed);
+                    mCurrentOrigin.x = Math.max(getMinX(), Math.min(getMaxX(), mCurrentOrigin.x - distanceX * mXScrollingSpeed));
                     ViewCompat.postInvalidateOnAnimation(WeekView.this);
                     break;
                 case VERTICAL:
@@ -236,7 +236,7 @@ public class WeekView extends View {
             switch (mCurrentFlingDirection) {
                 case LEFT:
                 case RIGHT:
-                    mScroller.fling((int) mCurrentOrigin.x, (int) mCurrentOrigin.y, (int) (velocityX * mXScrollingSpeed), 0, Integer.MIN_VALUE, getMaxX(), getMinY(), 0);
+                    mScroller.fling((int) mCurrentOrigin.x, (int) mCurrentOrigin.y, (int) (velocityX * mXScrollingSpeed), 0, getMinX(), getMaxX(), getMinY(), 0);
                     break;
                 case VERTICAL:
                     mScroller.fling((int) mCurrentOrigin.x, (int) mCurrentOrigin.y, 0, (int) velocityY, Integer.MIN_VALUE, getMaxX(), getMinY(), 0);
@@ -1878,6 +1878,10 @@ public class WeekView extends View {
             nearestOrigin = (int) (mCurrentOrigin.x - (leftDays - 1) * (mWidthPerDay + mColumnGap));
         }
 
+        if (mCurrentOrigin.x + nearestOrigin < getMinX()) {
+            nearestOrigin = (int) (mCurrentOrigin.x - (leftDays + 1) * (mWidthPerDay + mColumnGap));
+        }
+
         if (nearestOrigin != 0) {
             // Stop current animation.
             mScroller.forceFinished(true);
@@ -1887,6 +1891,13 @@ public class WeekView extends View {
         }
         // Reset scrolling and fling direction.
         mCurrentScrollDirection = mCurrentFlingDirection = Direction.NONE;
+    }
+
+    private int getMinX() {
+        if (latestScrollableDate == null) return Integer.MIN_VALUE;
+
+        int daysScrollableIntoTheFuture = Days.daysBetween(LocalDate.now(), latestScrollableDate.toLocalDate()).getDays();
+        return -(((int) (mColumnGap + mWidthPerDay) * (daysScrollableIntoTheFuture - mNumberOfVisibleDays) + (int) (determineColumnWidth() / 4));
     }
 
     private int getMaxX() {
