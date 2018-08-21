@@ -1878,9 +1878,9 @@ public class WeekView extends View {
             nearestOrigin = (int) (mCurrentOrigin.x - (leftDays - 1) * (mWidthPerDay + mColumnGap));
         }
 
-//        if (mCurrentOrigin.x + nearestOrigin < getMinX()) {
-//            nearestOrigin = (int) (mCurrentOrigin.x - (leftDays + 1) * (mWidthPerDay + mColumnGap));
-//        }
+        if (mCurrentOrigin.x + nearestOrigin < getMinX()) {
+            nearestOrigin = (int) (mCurrentOrigin.x - (leftDays + 1) * (mWidthPerDay + mColumnGap));
+        }
 
         if (nearestOrigin != 0) {
             // Stop current animation.
