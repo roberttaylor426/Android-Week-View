@@ -1897,7 +1897,7 @@ public class WeekView extends View {
         if (latestScrollableDate == null) return Integer.MIN_VALUE;
 
         int daysScrollableIntoTheFuture = Days.daysBetween(LocalDate.now(), latestScrollableDate.toLocalDate()).getDays();
-        return -(((int) (mColumnGap + mWidthPerDay) * (daysScrollableIntoTheFuture - mNumberOfVisibleDays) + (int) (determineColumnWidth() / 4));
+        return -(((int) (mColumnGap + mWidthPerDay) * (daysScrollableIntoTheFuture - mNumberOfVisibleDays) + (int) (determineColumnWidth() / 4)));
     }
 
     private int getMaxX() {
