@@ -32,6 +32,10 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.OverScroller;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,6 +51,9 @@ import static com.alamkanak.weekview.WeekViewUtil.*;
  * Website: http://alamkanak.github.io/
  */
 public class WeekView extends View {
+
+    private DateTime earliestScrollableDate;
+    private DateTime latestScrollableDate;
 
     private enum Direction {
         NONE, LEFT, RIGHT, VERTICAL
@@ -241,7 +248,10 @@ public class WeekView extends View {
         }
 
         private int getMaxX() {
-            return (int) (mColumnGap + mHeaderColumnWidth);
+            if (earliestScrollableDate == null) return Integer.MAX_VALUE;
+
+            int daysScrollableIntoThePast = Days.daysBetween(earliestScrollableDate.toLocalDate(), LocalDate.now()).getDays();
+            return (int) (mColumnGap + mWidthPerDay) * daysScrollableIntoThePast;
         }
 
         private int getMinY() {
@@ -1816,6 +1826,14 @@ public class WeekView extends View {
      */
     public void setScrollDuration(int scrollDuration) {
         mScrollDuration = scrollDuration;
+    }
+
+    public void setEarliestScrollableDate(DateTime dateTime) {
+        this.earliestScrollableDate = dateTime;
+    }
+
+    public void setLatestScrollableDate(DateTime dateTime) {
+        this.latestScrollableDate = dateTime;
     }
 
     /////////////////////////////////////////////////////////////////
