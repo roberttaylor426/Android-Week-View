@@ -1874,7 +1874,7 @@ public class WeekView extends View {
 
         int nearestOrigin = (int) (mCurrentOrigin.x - leftDays * (mWidthPerDay + mColumnGap));
 
-        if (nearestOrigin > getMaxX()) {
+        if (mCurrentOrigin.x - nearestOrigin > getMaxX()) {
             nearestOrigin = (int) (mCurrentOrigin.x - (leftDays - 1) * (mWidthPerDay + mColumnGap));
         }
 
