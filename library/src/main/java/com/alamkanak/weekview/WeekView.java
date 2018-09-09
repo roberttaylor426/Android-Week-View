@@ -823,16 +823,19 @@ public class WeekView extends View {
                             ) {
                         eventRect.rectF = new RectF(left, top, right, bottom);
 
-                        if (eventRect.event.view != null) {
-                            int width = (int) (right - left);
-                            int height = (int) (bottom - top);
-                            int widthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
-                            int heightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
-                            eventRect.event.view.measure(widthSpec, heightSpec);
-                            eventRect.event.view.layout(0, 0, width, height);
+                        View view = eventRect.event.view;
+                        if (view != null) {
+                            if (view.getMeasuredWidth() == 0) {
+                                int width = (int) (right - left);
+                                int height = (int) (bottom - top);
+                                int widthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+                                int heightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+                                view.measure(widthSpec, heightSpec);
+                                view.layout(0, 0, width, height);
+                            }
                             canvas.save();
                             canvas.translate(left, top);
-                            eventRect.event.view.draw(canvas);
+                            view.draw(canvas);
                             canvas.restore();
                         } else {
                             mEventBackgroundPaint.setColor(eventRect.event.getColor() == 0 ? mDefaultEventColor : eventRect.event.getColor());
