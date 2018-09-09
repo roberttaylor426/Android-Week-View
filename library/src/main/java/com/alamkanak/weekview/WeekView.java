@@ -1491,6 +1491,11 @@ public class WeekView extends View {
         invalidate();
     }
 
+    public void setHeaderTextTypeface(Typeface typeface) {
+        mHeaderTextPaint.setTypeface(typeface);
+        invalidate();
+    }
+
     public int getHeaderRowPadding() {
         return mHeaderRowPadding;
     }
