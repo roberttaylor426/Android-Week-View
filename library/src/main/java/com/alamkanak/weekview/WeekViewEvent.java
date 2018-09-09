@@ -1,5 +1,7 @@
 package com.alamkanak.weekview;
 
+import android.view.View;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -18,6 +20,7 @@ public class WeekViewEvent {
     private String mLocation;
     private int mColor;
     private boolean mAllDay;
+    public View view;
 
     public WeekViewEvent(){
 

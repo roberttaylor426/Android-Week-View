@@ -796,20 +796,21 @@ public class WeekView extends View {
     private void drawEvents(Calendar date, float startFromPixel, Canvas canvas) {
         if (mEventRects != null && mEventRects.size() > 0) {
             for (int i = 0; i < mEventRects.size(); i++) {
-                if (isSameDay(mEventRects.get(i).event.getStartTime(), date) && !mEventRects.get(i).event.isAllDay()){
+                EventRect eventRect = mEventRects.get(i);
+                if (isSameDay(eventRect.event.getStartTime(), date) && !eventRect.event.isAllDay()){
 
                     // Calculate top.
-                    float top = mHourHeight * getNumHours() * mEventRects.get(i).top / (getNumHours() * 60) + mCurrentOrigin.y + mHeaderHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight/2 + mEventMarginVertical;
+                    float top = mHourHeight * getNumHours() * eventRect.top / (getNumHours() * 60) + mCurrentOrigin.y + mHeaderHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight/2 + mEventMarginVertical;
 
                     // Calculate bottom.
-                    float bottom = mEventRects.get(i).bottom;
+                    float bottom = eventRect.bottom;
                     bottom = mHourHeight * getNumHours() * bottom / (getNumHours() * 60) + mCurrentOrigin.y + mHeaderHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight/2 - mEventMarginVertical;
 
                     // Calculate left and right.
-                    float left = startFromPixel + mEventRects.get(i).left * mWidthPerDay;
+                    float left = startFromPixel + eventRect.left * mWidthPerDay;
                     if (left < startFromPixel)
                         left += mOverlappingEventGap;
-                    float right = left + mEventRects.get(i).width * mWidthPerDay;
+                    float right = left + eventRect.width * mWidthPerDay;
                     if (right < startFromPixel + mWidthPerDay)
                         right -= mOverlappingEventGap;
 
@@ -820,13 +821,22 @@ public class WeekView extends View {
                             right > mHeaderColumnWidth &&
                             bottom > mHeaderHeight + mHeaderRowPadding * 2 + mTimeTextHeight / 2 + mHeaderMarginBottom
                             ) {
-                        mEventRects.get(i).rectF = new RectF(left, top, right, bottom);
-                        mEventBackgroundPaint.setColor(mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor());
-                        canvas.drawRoundRect(mEventRects.get(i).rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
-                        drawEventTitle(mEventRects.get(i).event, mEventRects.get(i).rectF, canvas, top, left);
+                        eventRect.rectF = new RectF(left, top, right, bottom);
+
+                        if (eventRect.event.view != null) {
+                            eventRect.event.view.layout(0, 0, (int)(right - left), (int)(bottom - top));
+                            canvas.save();
+                            canvas.translate(left, top);
+                            eventRect.event.view.draw(canvas);
+                            canvas.restore();
+                        } else {
+                            mEventBackgroundPaint.setColor(eventRect.event.getColor() == 0 ? mDefaultEventColor : eventRect.event.getColor());
+                            canvas.drawRoundRect(eventRect.rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
+                            drawEventTitle(eventRect.event, eventRect.rectF, canvas, top, left);
+                        }
                     }
                     else
-                        mEventRects.get(i).rectF = null;
+                        eventRect.rectF = null;
                 }
             }
         }
