@@ -826,8 +826,8 @@ public class WeekView extends View {
                         if (eventRect.event.view != null) {
                             int width = (int) (right - left);
                             int height = (int) (bottom - top);
-                            int widthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.UNSPECIFIED);
-                            int heightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.UNSPECIFIED);
+                            int widthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+                            int heightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
                             eventRect.event.view.measure(widthSpec, heightSpec);
                             eventRect.event.view.layout(0, 0, width, height);
                             canvas.save();
