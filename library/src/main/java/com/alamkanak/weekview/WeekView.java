@@ -35,6 +35,7 @@ import android.widget.OverScroller;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,7 +45,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-import static com.alamkanak.weekview.WeekViewUtil.*;
+import static com.alamkanak.weekview.WeekViewUtil.isSameDay;
+import static com.alamkanak.weekview.WeekViewUtil.today;
 
 /**
  * Created by Raquib-ul-Alam Kanak on 7/21/2014.
@@ -52,8 +54,8 @@ import static com.alamkanak.weekview.WeekViewUtil.*;
  */
 public class WeekView extends View {
 
-    private DateTime earliestScrollableDate;
-    private DateTime latestScrollableDate;
+    private LocalDate earliestScrollableDate;
+    private LocalDate latestScrollableDate;
 
     private int earliestScrollableHour = 0;
     private int latestScrollableHour = 24;
@@ -1838,12 +1840,28 @@ public class WeekView extends View {
         mScrollDuration = scrollDuration;
     }
 
-    public void setEarliestScrollableDate(DateTime dateTime) {
-        this.earliestScrollableDate = dateTime;
+    public void setEarliestScrollableDate(DateTime earliestDateTime) {
+        this.earliestScrollableDate = earliestDateTime.toLocalDate();
     }
 
-    public void setLatestScrollableDate(DateTime dateTime) {
-        this.latestScrollableDate = dateTime;
+    public void setEarliestScrollableDate(LocalDateTime earliestDateTime) {
+        this.earliestScrollableDate = earliestDateTime.toLocalDate();
+    }
+
+    public void setEarliestScrollableDate(LocalDate earliestDate) {
+        this.earliestScrollableDate = earliestDate;
+    }
+
+    public void setLatestScrollableDate(DateTime latestDateTime) {
+        this.latestScrollableDate = latestDateTime.toLocalDate();
+    }
+
+    public void setLatestScrollableDate(LocalDateTime latestDateTime) {
+        this.latestScrollableDate = latestDateTime.toLocalDate();
+    }
+
+    public void setLatestScrollableDate(LocalDate latestDate) {
+        this.latestScrollableDate = latestDate;
     }
 
     public void setEarliestScrollableHour(int hour) {
@@ -1917,14 +1935,14 @@ public class WeekView extends View {
     private int getMinX() {
         if (latestScrollableDate == null) return Integer.MIN_VALUE;
 
-        int daysScrollableIntoTheFuture = Days.daysBetween(LocalDate.now(), latestScrollableDate.toLocalDate()).getDays() + 1;
+        int daysScrollableIntoTheFuture = Days.daysBetween(LocalDate.now(), latestScrollableDate).getDays() + 1;
         return -((int) (mColumnGap + mWidthPerDay) * Math.max(0, (daysScrollableIntoTheFuture - mNumberOfVisibleDays)) + (int) (determineColumnWidth() / 4));
     }
 
     private int getMaxX() {
         if (earliestScrollableDate == null) return Integer.MAX_VALUE;
 
-        int daysScrollableIntoThePast = Days.daysBetween(earliestScrollableDate.toLocalDate(), LocalDate.now()).getDays();
+        int daysScrollableIntoThePast = Days.daysBetween(earliestScrollableDate, LocalDate.now()).getDays();
         return ((int) (mColumnGap + mWidthPerDay) * daysScrollableIntoThePast) + (int) (determineColumnWidth() / 4);
     }
 
