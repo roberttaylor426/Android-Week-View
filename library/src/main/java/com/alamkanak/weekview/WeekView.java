@@ -822,14 +822,22 @@ public class WeekView extends View {
                             top < getHeight() &&
                             right > mHeaderColumnWidth &&
                             bottom > mHeaderHeight + mHeaderRowPadding * 2 + mTimeTextHeight / 2 + mHeaderMarginBottom
-                            ) {
+                    ) {
                         eventRect.rectF = new RectF(left, top, right, bottom);
 
-                        if (eventRect.event.view != null) {
-                            eventRect.event.view.layout(0, 0, (int)(right - left), (int)(bottom - top));
+                        View view = eventRect.event.view;
+                        if (view != null) {
+                            if (view.getMeasuredWidth() == 0) {
+                                int width = (int) (right - left);
+                                int height = (int) (bottom - top);
+                                int widthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+                                int heightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+                                view.measure(widthSpec, heightSpec);
+                                view.layout(0, 0, width, height);
+                            }
                             canvas.save();
                             canvas.translate(left, top);
-                            eventRect.event.view.draw(canvas);
+                            view.draw(canvas);
                             canvas.restore();
                         } else {
                             mEventBackgroundPaint.setColor(eventRect.event.getColor() == 0 ? mDefaultEventColor : eventRect.event.getColor());
@@ -853,19 +861,20 @@ public class WeekView extends View {
     private void drawAllDayEvents(Calendar date, float startFromPixel, Canvas canvas) {
         if (mEventRects != null && mEventRects.size() > 0) {
             for (int i = 0; i < mEventRects.size(); i++) {
-                if (isSameDay(mEventRects.get(i).event.getStartTime(), date) && mEventRects.get(i).event.isAllDay()){
+                EventRect eventRect = mEventRects.get(i);
+                if (isSameDay(eventRect.event.getStartTime(), date) && eventRect.event.isAllDay()){
 
                     // Calculate top.
                     float top = mHeaderRowPadding * 2 + mHeaderMarginBottom +  + mTimeTextHeight/2 + mEventMarginVertical;
 
                     // Calculate bottom.
-                    float bottom = top + mEventRects.get(i).bottom;
+                    float bottom = top + eventRect.bottom;
 
                     // Calculate left and right.
-                    float left = startFromPixel + mEventRects.get(i).left * mWidthPerDay;
+                    float left = startFromPixel + eventRect.left * mWidthPerDay;
                     if (left < startFromPixel)
                         left += mOverlappingEventGap;
-                    float right = left + mEventRects.get(i).width * mWidthPerDay;
+                    float right = left + eventRect.width * mWidthPerDay;
                     if (right < startFromPixel + mWidthPerDay)
                         right -= mOverlappingEventGap;
 
@@ -875,14 +884,31 @@ public class WeekView extends View {
                             top < getHeight() &&
                             right > mHeaderColumnWidth &&
                             bottom > 0
-                            ) {
-                        mEventRects.get(i).rectF = new RectF(left, top, right, bottom);
-                        mEventBackgroundPaint.setColor(mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor());
-                        canvas.drawRoundRect(mEventRects.get(i).rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
-                        drawEventTitle(mEventRects.get(i).event, mEventRects.get(i).rectF, canvas, top, left);
+                    ) {
+                        eventRect.rectF = new RectF(left, top, right, bottom);
+
+                        View view = eventRect.event.view;
+                        if (view != null) {
+                            if (view.getMeasuredWidth() == 0) {
+                                int width = (int) (right - left);
+                                int height = (int) (bottom - top);
+                                int widthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+                                int heightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+                                view.measure(widthSpec, heightSpec);
+                                view.layout(0, 0, width, height);
+                            }
+                            canvas.save();
+                            canvas.translate(left, top);
+                            view.draw(canvas);
+                            canvas.restore();
+                        } else {
+                            mEventBackgroundPaint.setColor(eventRect.event.getColor() == 0 ? mDefaultEventColor : eventRect.event.getColor());
+                            canvas.drawRoundRect(eventRect.rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
+                            drawEventTitle(eventRect.event, eventRect.rectF, canvas, top, left);
+                        }
                     }
                     else
-                        mEventRects.get(i).rectF = null;
+                        eventRect.rectF = null;
                 }
             }
         }
@@ -1467,6 +1493,16 @@ public class WeekView extends View {
         invalidate();
     }
 
+    public void setTodayHeaderTextTypeface(Typeface typeface) {
+        mTodayHeaderTextPaint.setTypeface(typeface);
+        invalidate();
+    }
+
+    public void setHeaderTextTypeface(Typeface typeface) {
+        mHeaderTextPaint.setTypeface(typeface);
+        invalidate();
+    }
+
     public int getHeaderRowPadding() {
         return mHeaderRowPadding;
     }
@@ -1840,6 +1876,10 @@ public class WeekView extends View {
         mScrollDuration = scrollDuration;
     }
 
+
+
+
+
     public void setEarliestScrollableDate(DateTime earliestDateTime) {
         this.earliestScrollableDate = earliestDateTime.toLocalDate();
     }
@@ -1943,7 +1983,7 @@ public class WeekView extends View {
         if (earliestScrollableDate == null) return Integer.MAX_VALUE;
 
         int daysScrollableIntoThePast = Days.daysBetween(earliestScrollableDate, LocalDate.now()).getDays();
-        return ((int) (mColumnGap + mWidthPerDay) * daysScrollableIntoThePast) + (int) (determineColumnWidth() / 4);
+        return ((int) (mColumnGap + mWidthPerDay) * Math.max(0, daysScrollableIntoThePast)) + (int) (determineColumnWidth() / 4);
     }
 
     private int getNumHours() {
