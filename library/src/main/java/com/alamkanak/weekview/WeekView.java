@@ -837,6 +837,8 @@ public class WeekView extends View {
                             }
                             canvas.save();
                             canvas.translate(left, top);
+                            view.setX(left);
+                            view.setY(top);
                             view.draw(canvas);
                             canvas.restore();
                         } else {
