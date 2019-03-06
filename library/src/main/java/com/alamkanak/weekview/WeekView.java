@@ -375,15 +375,6 @@ public class WeekView extends FrameLayout {
         }
 
         init();
-
-        RelativeLayout entriesLayout = new RelativeLayout(this.getContext());
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        entriesLayout.setLayoutParams(layoutParams);
-
-        TextView tv = new TextView(getContext());
-        tv.setText("TEST");
-        entriesLayout.addView(tv);
-        this.addView(entriesLayout);
     }
 
     private void init() {
