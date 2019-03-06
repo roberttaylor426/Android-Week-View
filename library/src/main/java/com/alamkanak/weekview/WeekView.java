@@ -55,7 +55,7 @@ import static com.alamkanak.weekview.WeekViewUtil.today;
  * Created by Raquib-ul-Alam Kanak on 7/21/2014.
  * Website: http://alamkanak.github.io/
  */
-public class WeekView extends FrameLayout {
+public class WeekView extends View {
 
     private LocalDate earliestScrollableDate;
     private LocalDate latestScrollableDate;
