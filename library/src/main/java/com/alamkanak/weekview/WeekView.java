@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 /**
  * Created by Raquib-ul-Alam Kanak on 7/21/2014.
@@ -27,5 +28,10 @@ public class WeekView extends FrameLayout {
 
         this.innerWeekView = new InnerWeekView(context, attrs, defStyleAttr);
         this.addView(innerWeekView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+        RelativeLayout relativeLayout = new RelativeLayout(context);
+        this.addView(relativeLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+        this.innerWeekView.overlayView = relativeLayout;
     }
 }
