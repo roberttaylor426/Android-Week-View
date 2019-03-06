@@ -30,7 +30,10 @@ import android.view.ScaleGestureDetector;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.FrameLayout;
 import android.widget.OverScroller;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -52,7 +55,7 @@ import static com.alamkanak.weekview.WeekViewUtil.today;
  * Created by Raquib-ul-Alam Kanak on 7/21/2014.
  * Website: http://alamkanak.github.io/
  */
-public class WeekView extends View {
+public class WeekView extends FrameLayout {
 
     private LocalDate earliestScrollableDate;
     private LocalDate latestScrollableDate;
@@ -372,6 +375,15 @@ public class WeekView extends View {
         }
 
         init();
+
+        RelativeLayout entriesLayout = new RelativeLayout(this.getContext());
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        entriesLayout.setLayoutParams(layoutParams);
+
+        TextView tv = new TextView(getContext());
+        tv.setText("TEST");
+        entriesLayout.addView(tv);
+        this.addView(entriesLayout);
     }
 
     private void init() {
@@ -837,8 +849,6 @@ public class WeekView extends View {
                             }
                             canvas.save();
                             canvas.translate(left, top);
-                            view.setX(left);
-                            view.setY(top);
                             view.draw(canvas);
                             canvas.restore();
                         } else {
