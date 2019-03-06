@@ -1132,6 +1132,8 @@ public class InnerWeekView extends View {
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.topMargin = (int)top;
                 layoutParams.leftMargin = (int)left;
+                layoutParams.width = width;
+                layoutParams.height = height;
 
                 overlayView.addView(eventRect.event.view, layoutParams);
             }
