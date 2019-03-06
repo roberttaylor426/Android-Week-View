@@ -167,7 +167,7 @@ public class InnerWeekView extends View {
     private DateTimeInterpreter mDateTimeInterpreter;
     private ScrollListener mScrollListener;
 
-    public RelativeLayout overlayView;
+    //public RelativeLayout overlayView;
 
     private final GestureDetector.SimpleOnGestureListener mGestureListener = new GestureDetector.SimpleOnGestureListener() {
 
@@ -830,18 +830,18 @@ public class InnerWeekView extends View {
 
                         View view = eventRect.event.view;
                         if (view != null) {
-//                            if (view.getMeasuredWidth() == 0) {
-//                                int width = (int) (right - left);
-//                                int height = (int) (bottom - top);
-//                                int widthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
-//                                int heightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
-//                                view.measure(widthSpec, heightSpec);
-//                                view.layout(0, 0, width, height);
-//                            }
-//                            canvas.save();
-//                            canvas.translate(left, top);
-//                            view.draw(canvas);
-//                            canvas.restore();
+                            if (view.getMeasuredWidth() == 0) {
+                                int width = (int) (right - left);
+                                int height = (int) (bottom - top);
+                                int widthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+                                int heightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+                                view.measure(widthSpec, heightSpec);
+                                view.layout(0, 0, width, height);
+                            }
+                            canvas.save();
+                            canvas.translate(left, top);
+                            view.draw(canvas);
+                            canvas.restore();
                         } else {
                             mEventBackgroundPaint.setColor(eventRect.event.getColor() == 0 ? mDefaultEventColor : eventRect.event.getColor());
                             canvas.drawRoundRect(eventRect.rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
@@ -1102,43 +1102,47 @@ public class InnerWeekView extends View {
             computePositionOfEvents(eventRects);
         }
 
-        addEventsWithViewsToOverlay(mEventRects);
+        //addEventsWithViewsToOverlay(mEventRects);
     }
 
-    private void addEventsWithViewsToOverlay(List<EventRect> eventRects) {
-        for (EventRect eventRect : eventRects) {
-            if (eventRect.event.view != null && overlayView != null && !eventRect.event.isAllDay()) {
-                View view = eventRect.event.view;
-
-                // Calculate top.
-                float top = mHourHeight * getNumHours() * eventRect.top / (getNumHours() * 60) + mCurrentOrigin.y + mHeaderHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight / 2 + mEventMarginVertical;
-
-                // Calculate bottom.
-                float bottom = eventRect.bottom;
-                bottom = mHourHeight * getNumHours() * bottom / (getNumHours() * 60) + mCurrentOrigin.y + mHeaderHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight / 2 - mEventMarginVertical;
-
-                // Calculate left and right.
-                float left = eventRect.left * mWidthPerDay;
-                float right = left + eventRect.width * mWidthPerDay;
-
-
-                int width = (int) (right - left);
-                int height = (int) (bottom - top);
-                int widthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
-                int heightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
-                view.measure(widthSpec, heightSpec);
-                view.layout(0, 0, width, height);
-
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.topMargin = (int)top;
-                layoutParams.leftMargin = (int)left;
-                layoutParams.width = width;
-                layoutParams.height = height;
-
-                overlayView.addView(eventRect.event.view, layoutParams);
-            }
-        }
-    }
+    /**
+     * Aborted attempt to attach views to a view group, so that they might be animated
+     * @param eventRects
+     */
+//    private void addEventsWithViewsToOverlay(List<EventRect> eventRects) {
+//        for (EventRect eventRect : eventRects) {
+//            if (eventRect.event.view != null && overlayView != null && !eventRect.event.isAllDay()) {
+//                View view = eventRect.event.view;
+//
+//                // Calculate top.
+//                float top = mHourHeight * getNumHours() * eventRect.top / (getNumHours() * 60) + mCurrentOrigin.y + mHeaderHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight / 2 + mEventMarginVertical;
+//
+//                // Calculate bottom.
+//                float bottom = eventRect.bottom;
+//                bottom = mHourHeight * getNumHours() * bottom / (getNumHours() * 60) + mCurrentOrigin.y + mHeaderHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight / 2 - mEventMarginVertical;
+//
+//                // Calculate left and right.
+//                float left = eventRect.left * mWidthPerDay;
+//                float right = left + eventRect.width * mWidthPerDay;
+//
+//
+//                int width = (int) (right - left);
+//                int height = (int) (bottom - top);
+//                int widthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+//                int heightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+//                view.measure(widthSpec, heightSpec);
+//                view.layout(0, 0, width, height);
+//
+//                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+//                layoutParams.topMargin = (int)top;
+//                layoutParams.leftMargin = (int)left;
+//                layoutParams.width = width;
+//                layoutParams.height = height;
+//
+//                overlayView.addView(eventRect.event.view, layoutParams);
+//            }
+//        }
+//    }
 
     /**
      * Cache the event for smooth scrolling functionality.
