@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.alamkanak.weekview.WeekViewUtil.isSameDay;
 import static com.alamkanak.weekview.WeekViewUtil.today;
@@ -168,6 +169,8 @@ public class WeekView extends View {
     private FirstVisibleDayChangedListener mFirstVisibleDayChangedListener;
     private ScrollListener mScrollListener;
 
+    private AtomicReference<EventRect> eventToTemporarilyHide = new AtomicReference<>();
+
     private final GestureDetector.SimpleOnGestureListener mGestureListener = new GestureDetector.SimpleOnGestureListener() {
 
         @Override
@@ -271,6 +274,7 @@ public class WeekView extends View {
                 Collections.reverse(reversedEventRects);
                 for (EventRect event : reversedEventRects) {
                     if (event.rectF != null && e.getX() > event.rectF.left && e.getX() < event.rectF.right && e.getY() > event.rectF.top && e.getY() < event.rectF.bottom) {
+                        eventToTemporarilyHide.set(event);
                         mEventClickListener.onEventClick(event.originalEvent, event.rectF);
                         playSoundEffect(SoundEffectConstants.CLICK);
                         return super.onSingleTapConfirmed(e);
@@ -843,10 +847,15 @@ public class WeekView extends View {
                                 view.measure(widthSpec, heightSpec);
                                 view.layout(0, 0, width, height);
                             }
-                            canvas.save();
-                            canvas.translate(left, top);
-                            view.draw(canvas);
-                            canvas.restore();
+
+                            if (eventToTemporarilyHide.get() == eventRect) {
+                                eventToTemporarilyHide.set(null);
+                            } else {
+                                canvas.save();
+                                canvas.translate(left, top);
+                                view.draw(canvas);
+                                canvas.restore();
+                            }
                         } else {
                             mEventBackgroundPaint.setColor(eventRect.event.getColor() == 0 ? mDefaultEventColor : eventRect.event.getColor());
                             canvas.drawRoundRect(eventRect.rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
