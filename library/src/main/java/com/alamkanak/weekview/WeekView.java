@@ -22,6 +22,7 @@ import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.HapticFeedbackConstants;
@@ -829,6 +830,7 @@ public class WeekView extends View {
                             right > mHeaderColumnWidth &&
                             bottom > mHeaderHeight + mHeaderRowPadding * 2 + mTimeTextHeight / 2 + mHeaderMarginBottom
                     ) {
+                        Log.d("*****", "Drawing event: " + left + " " + top)
                         eventRect.rectF = new RectF(left, top, right, bottom);
 
                         View view = eventRect.event.view;
