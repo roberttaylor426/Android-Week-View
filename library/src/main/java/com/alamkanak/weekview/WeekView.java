@@ -1885,10 +1885,6 @@ public class WeekView extends View {
         mScrollDuration = scrollDuration;
     }
 
-
-
-
-
     public void setEarliestScrollableDate(DateTime earliestDateTime) {
         this.earliestScrollableDate = earliestDateTime.toLocalDate();
     }
