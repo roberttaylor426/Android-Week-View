@@ -834,7 +834,6 @@ public class WeekView extends View {
                             right > mHeaderColumnWidth &&
                             bottom > mHeaderHeight + mHeaderRowPadding * 2 + mTimeTextHeight / 2 + mHeaderMarginBottom
                     ) {
-                        Log.d("*****", "Drawing event: " + left + " " + top);
                         eventRect.rectF = new RectF(left, top, right, bottom);
 
                         View view = eventRect.event.view;
