@@ -30,6 +30,7 @@ import android.view.ScaleGestureDetector;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.LinearLayout;
 import android.widget.OverScroller;
 
 import org.joda.time.DateTime;
@@ -52,7 +53,7 @@ import static com.alamkanak.weekview.WeekViewUtil.today;
  * Created by Raquib-ul-Alam Kanak on 7/21/2014.
  * Website: http://alamkanak.github.io/
  */
-public class WeekView extends View {
+public class WeekView extends LinearLayout {
 
     private LocalDate earliestScrollableDate;
     private LocalDate latestScrollableDate;
