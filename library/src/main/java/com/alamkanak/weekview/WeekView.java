@@ -163,6 +163,7 @@ public class WeekView extends View {
     private EmptyViewClickListener mEmptyViewClickListener;
     private EmptyViewLongPressListener mEmptyViewLongPressListener;
     private DateTimeInterpreter mDateTimeInterpreter;
+    private FirstVisibleDayChangedListener mFirstVisibleDayChangedListener;
     private ScrollListener mScrollListener;
 
     private final GestureDetector.SimpleOnGestureListener mGestureListener = new GestureDetector.SimpleOnGestureListener() {
@@ -175,6 +176,10 @@ public class WeekView extends View {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            if (mScrollListener != null) {
+                mScrollListener.onScroll();
+            }
+
             // Check if view is zoomed.
             if (mIsZooming)
                 return true;
@@ -649,8 +654,8 @@ public class WeekView extends View {
         Calendar oldFirstVisibleDay = mFirstVisibleDay;
         mFirstVisibleDay = (Calendar) today.clone();
         mFirstVisibleDay.add(Calendar.DATE, -(Math.round(mCurrentOrigin.x / (mWidthPerDay + mColumnGap))));
-        if(!mFirstVisibleDay.equals(oldFirstVisibleDay) && mScrollListener != null){
-            mScrollListener.onFirstVisibleDayChanged(mFirstVisibleDay, oldFirstVisibleDay);
+        if(!mFirstVisibleDay.equals(oldFirstVisibleDay) && mFirstVisibleDayChangedListener != null){
+            mFirstVisibleDayChangedListener.onFirstVisibleDayChanged(mFirstVisibleDay, oldFirstVisibleDay);
         }
         for (int dayNumber = leftDaysWithGaps + 1;
              dayNumber <= leftDaysWithGaps + mNumberOfVisibleDays + 1;
@@ -1338,12 +1343,16 @@ public class WeekView extends View {
         return mEmptyViewLongPressListener;
     }
 
-    public void setScrollListener(ScrollListener scrolledListener){
-        this.mScrollListener = scrolledListener;
+    public void setFirstVisibleDayChangedListener(FirstVisibleDayChangedListener firstVisibleDayChangedListener){
+        this.mFirstVisibleDayChangedListener = firstVisibleDayChangedListener;
     }
 
-    public ScrollListener getScrollListener(){
-        return mScrollListener;
+    public void setScrollListener(ScrollListener scrollListener){
+        this.mScrollListener = scrollListener;
+    }
+
+    public FirstVisibleDayChangedListener getScrollListener(){
+        return mFirstVisibleDayChangedListener;
     }
 
     /**
@@ -2153,7 +2162,7 @@ public class WeekView extends View {
         void onEmptyViewLongPress(Calendar time);
     }
 
-    public interface ScrollListener {
+    public interface FirstVisibleDayChangedListener {
         /**
          * Called when the first visible day has changed.
          *
@@ -2162,5 +2171,9 @@ public class WeekView extends View {
          * @param oldFirstVisibleDay The old first visible day (is null on the first call).
          */
         void onFirstVisibleDayChanged(Calendar newFirstVisibleDay, Calendar oldFirstVisibleDay);
+    }
+
+    public interface ScrollListener {
+        void onScroll();
     }
 }
